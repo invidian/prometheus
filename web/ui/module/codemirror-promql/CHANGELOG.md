@@ -1,3 +1,14 @@
+0.18.0 / 2021-10-20
+===================
+
+* **[Feature]**: Provide a way to override the api prefix used to contact a remote Prometheus.
+* **[Feature]**: Linter and Autocompletion support trigonometric function (like `sin`, `cos`)
+* **[BreakingChange]**: The lib is available under the `dist` folder. When importing `codemirror-promql`, it means you 
+will need to add `dist` in the import. For example `import { newCompleteStrategy } from 'codemirror-promql/cjs/complete';`
+become `import { newCompleteStrategy } from 'codemirror-promql/dist/cjs/complete';`
+* **[BreakingChange]**: lezer-promql has been migrated into codemirror-promql in the `grammar` folder
+* **[BreakingChange]**: Support last version of Codemirror.next (v0.19.0).
+
 0.17.0 / 2021-08-10
 ===================
 
