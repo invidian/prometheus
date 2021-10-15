@@ -33,11 +33,13 @@ import (
 	"github.com/prometheus/prometheus/notifier"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/prometheus/prometheus/rules"
+	"github.com/prometheus/prometheus/util/testutil"
 )
 
-var promPath = os.Args[0]
-var promConfig = filepath.Join("..", "..", "documentation", "examples", "prometheus.yml")
-var promData = filepath.Join(os.TempDir(), "data")
+var (
+	promPath   = os.Args[0]
+	promConfig = filepath.Join("..", "..", "documentation", "examples", "prometheus.yml")
+)
 
 func TestMain(m *testing.M) {
 	for i, arg := range os.Args {
@@ -52,7 +54,6 @@ func TestMain(m *testing.M) {
 	os.Setenv("no_proxy", "localhost,127.0.0.1,0.0.0.0,:")
 
 	exitCode := m.Run()
-	os.RemoveAll(promData)
 	os.Exit(exitCode)
 }
 
@@ -197,12 +198,14 @@ func TestSendAlerts(t *testing.T) {
 }
 
 func TestWALSegmentSizeBounds(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		t.Skip("skipping test in short mode.")
 	}
 
 	for size, expectedExitStatus := range map[string]int{"9MB": 1, "257MB": 1, "10": 2, "1GB": 1, "12MB": 0} {
-		prom := exec.Command(promPath, "-test.main", "--storage.tsdb.wal-segment-size="+size, "--config.file="+promConfig)
+		prom := exec.Command(promPath, "-test.main", "--storage.tsdb.wal-segment-size="+size, "--config.file="+promConfig, fmt.Sprintf("--web.listen-address=0.0.0.0:%d", testutil.RandomUnprivilegedPort(t)), "--storage.tsdb.path="+filepath.Join(t.TempDir(), "data"))
 
 		// Log stderr in case of failure.
 		stderr, err := prom.StderrPipe()
@@ -239,12 +242,14 @@ func TestWALSegmentSizeBounds(t *testing.T) {
 }
 
 func TestMaxBlockChunkSegmentSizeBounds(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		t.Skip("skipping test in short mode.")
 	}
 
 	for size, expectedExitStatus := range map[string]int{"512KB": 1, "1MB": 0} {
-		prom := exec.Command(promPath, "-test.main", "--storage.tsdb.max-block-chunk-segment-size="+size, "--config.file="+promConfig)
+		prom := exec.Command(promPath, "-test.main", "--storage.tsdb.max-block-chunk-segment-size="+size, "--config.file="+promConfig, fmt.Sprintf("--web.listen-address=0.0.0.0:%d", testutil.RandomUnprivilegedPort(t)), "--storage.tsdb.path="+filepath.Join(t.TempDir(), "data"))
 
 		// Log stderr in case of failure.
 		stderr, err := prom.StderrPipe()
