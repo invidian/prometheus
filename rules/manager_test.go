@@ -45,6 +45,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestAlertingRule(t *testing.T) {
+	t.Parallel()
+
 	suite, err := promql.NewTest(t, `
 		load 5m
 			http_requests{job="app-server", instance="0", group="canary", severity="overwrite-me"}	75 85  95 105 105  95  85
@@ -186,6 +188,8 @@ func TestAlertingRule(t *testing.T) {
 }
 
 func TestForStateAddSamples(t *testing.T) {
+	t.Parallel()
+
 	suite, err := promql.NewTest(t, `
 		load 5m
 			http_requests{job="app-server", instance="0", group="canary", severity="overwrite-me"}	75 85  95 105 105  95  85
@@ -347,6 +351,8 @@ func sortAlerts(items []*Alert) {
 }
 
 func TestForStateRestore(t *testing.T) {
+	t.Parallel()
+
 	suite, err := promql.NewTest(t, `
 		load 5m
 		http_requests{job="app-server", instance="0", group="canary", severity="overwrite-me"}	75  85 50 0 0 25 0 0 40 0 120
@@ -517,6 +523,8 @@ func TestForStateRestore(t *testing.T) {
 }
 
 func TestStaleness(t *testing.T) {
+	t.Parallel()
+
 	st := teststorage.New(t)
 	defer st.Close()
 	engineOpts := promql.EngineOpts{
@@ -607,6 +615,8 @@ func readSeriesSet(ss storage.SeriesSet) (map[string][]promql.Point, error) {
 }
 
 func TestCopyState(t *testing.T) {
+	t.Parallel()
+
 	oldGroup := &Group{
 		rules: []Rule{
 			NewAlertingRule("alert", nil, 0, nil, nil, nil, "", true, nil),
@@ -662,6 +672,8 @@ func TestCopyState(t *testing.T) {
 }
 
 func TestDeletedRuleMarkedStale(t *testing.T) {
+	t.Parallel()
+
 	st := teststorage.New(t)
 	defer st.Close()
 	oldGroup := &Group{
@@ -702,6 +714,8 @@ func TestDeletedRuleMarkedStale(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
+	t.Parallel()
+
 	files := []string{"fixtures/rules.yaml"}
 	expected := map[string]labels.Labels{
 		"test": labels.FromStrings("name", "value"),
@@ -845,6 +859,8 @@ func reloadAndValidate(rgs *rulefmt.RuleGroups, t *testing.T, tmpFile *os.File, 
 }
 
 func TestNotify(t *testing.T) {
+	t.Parallel()
+
 	storage := teststorage.New(t)
 	defer storage.Close()
 	engineOpts := promql.EngineOpts{
@@ -909,6 +925,8 @@ func TestNotify(t *testing.T) {
 }
 
 func TestMetricsUpdate(t *testing.T) {
+	t.Parallel()
+
 	files := []string{"fixtures/rules.yaml", "fixtures/rules2.yaml"}
 	metricNames := []string{
 		"prometheus_rule_evaluations_total",
@@ -987,6 +1005,8 @@ func TestMetricsUpdate(t *testing.T) {
 }
 
 func TestGroupStalenessOnRemoval(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		t.Skip("skipping test in short mode.")
 	}
@@ -1065,6 +1085,8 @@ func TestGroupStalenessOnRemoval(t *testing.T) {
 }
 
 func TestMetricsStalenessOnManagerShutdown(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		t.Skip("skipping test in short mode.")
 	}
@@ -1134,6 +1156,8 @@ func countStaleNaN(t *testing.T, st storage.Storage) int {
 }
 
 func TestGroupHasAlertingRules(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		group *Group
 		want  bool
@@ -1173,6 +1197,8 @@ func TestGroupHasAlertingRules(t *testing.T) {
 }
 
 func TestRuleHealthUpdates(t *testing.T) {
+	t.Parallel()
+
 	st := teststorage.New(t)
 	defer st.Close()
 	engineOpts := promql.EngineOpts{

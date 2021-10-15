@@ -217,6 +217,8 @@ func (s *Service) hasSynced() bool {
 }
 
 func TestRetryOnError(t *testing.T) {
+	t.Parallel()
+
 	for _, successAt := range []int{1, 2, 3} {
 		var called int
 		f := func() error {
@@ -232,6 +234,8 @@ func TestRetryOnError(t *testing.T) {
 }
 
 func TestCheckNetworkingV1Supported(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		version       string
 		wantSupported bool
@@ -250,6 +254,8 @@ func TestCheckNetworkingV1Supported(t *testing.T) {
 	for _, tc := range tests {
 		tc := tc
 		t.Run(tc.version, func(t *testing.T) {
+			t.Parallel()
+
 			clientset := fake.NewSimpleClientset()
 			fakeDiscovery, _ := clientset.Discovery().(*fakediscovery.FakeDiscovery)
 			fakeDiscovery.FakedServerVersion = &version.Info{GitVersion: tc.version}

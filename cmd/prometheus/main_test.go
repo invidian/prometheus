@@ -57,6 +57,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestComputeExternalURL(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		input string
 		valid bool
@@ -107,6 +109,8 @@ func TestComputeExternalURL(t *testing.T) {
 
 // Let's provide an invalid configuration file and verify the exit status indicates the error.
 func TestFailedStartupExitCode(t *testing.T) {
+	t.Parallel()
+
 	if testing.Short() {
 		t.Skip("skipping test in short mode.")
 	}
@@ -133,6 +137,8 @@ func (s senderFunc) Send(alerts ...*notifier.Alert) {
 }
 
 func TestSendAlerts(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		in  []*rules.Alert
 		exp []*notifier.Alert
@@ -185,6 +191,8 @@ func TestSendAlerts(t *testing.T) {
 	for i, tc := range testCases {
 		tc := tc
 		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			t.Parallel()
+
 			senderFunc := senderFunc(func(alerts ...*notifier.Alert) {
 				if len(tc.in) == 0 {
 					t.Fatalf("sender called with 0 alert")
@@ -287,6 +295,8 @@ func TestMaxBlockChunkSegmentSizeBounds(t *testing.T) {
 }
 
 func TestTimeMetrics(t *testing.T) {
+	t.Parallel()
+
 	tmpDir, err := ioutil.TempDir("", "time_metrics_e2e")
 	require.NoError(t, err)
 
