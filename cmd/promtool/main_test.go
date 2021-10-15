@@ -27,6 +27,8 @@ import (
 )
 
 func TestQueryRange(t *testing.T) {
+	t.Parallel()
+
 	s, getRequest := mockServer(200, `{"status": "success", "data": {"resultType": "matrix", "result": []}}`)
 	defer s.Close()
 
@@ -50,6 +52,8 @@ func TestQueryRange(t *testing.T) {
 }
 
 func TestQueryInstant(t *testing.T) {
+	t.Parallel()
+
 	s, getRequest := mockServer(200, `{"status": "success", "data": {"resultType": "vector", "result": []}}`)
 	defer s.Close()
 
@@ -81,6 +85,8 @@ func mockServer(code int, body string) (*httptest.Server, func() *http.Request) 
 }
 
 func TestCheckSDFile(t *testing.T) {
+	t.Parallel()
+
 	cases := []struct {
 		name string
 		file string
@@ -110,7 +116,11 @@ func TestCheckSDFile(t *testing.T) {
 		},
 	}
 	for _, test := range cases {
+		test := test
+
 		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
 			err := checkSDFile(test.file)
 			if test.err != "" {
 				require.Equalf(t, test.err, err.Error(), "Expected error %q, got %q", test.err, err.Error())
@@ -122,6 +132,8 @@ func TestCheckSDFile(t *testing.T) {
 }
 
 func TestCheckDuplicates(t *testing.T) {
+	t.Parallel()
+
 	cases := []struct {
 		name         string
 		ruleFile     string
@@ -146,6 +158,8 @@ func TestCheckDuplicates(t *testing.T) {
 	for _, test := range cases {
 		c := test
 		t.Run(c.name, func(t *testing.T) {
+			t.Parallel()
+
 			rgs, err := rulefmt.ParseFile(c.ruleFile)
 			require.Empty(t, err)
 			dups := checkDuplicates(rgs.Groups)

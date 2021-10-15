@@ -40,6 +40,8 @@ func (mockAPI mockQueryRangeAPI) QueryRange(ctx context.Context, query string, r
 
 // TestBackfillRuleIntegration is an integration test that runs all the rule importer code to confirm the parts work together.
 func TestBackfillRuleIntegration(t *testing.T) {
+	t.Parallel()
+
 	const (
 		testMaxSampleCount = 50
 		testValue          = 123
