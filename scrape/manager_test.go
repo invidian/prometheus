@@ -30,6 +30,8 @@ import (
 )
 
 func TestPopulateLabels(t *testing.T) {
+	t.Parallel()
+
 	cases := []struct {
 		in      labels.Labels
 		cfg     *config.ScrapeConfig
@@ -332,18 +334,24 @@ func TestPopulateLabels(t *testing.T) {
 			err:     "scrape timeout cannot be greater than scrape interval (\"2s\" > \"1s\")",
 		},
 	}
-	for _, c := range cases {
+	for i, c := range cases {
+		c := c
+
 		in := c.in.Copy()
 
-		res, orig, err := populateLabels(c.in, c.cfg)
-		if c.err != "" {
-			require.EqualError(t, err, c.err)
-		} else {
-			require.NoError(t, err)
-		}
-		require.Equal(t, c.in, in)
-		require.Equal(t, c.res, res)
-		require.Equal(t, c.resOrig, orig)
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
+			t.Parallel()
+
+			res, orig, err := populateLabels(c.in, c.cfg)
+			if c.err != "" {
+				require.EqualError(t, err, c.err)
+			} else {
+				require.NoError(t, err)
+			}
+			require.Equal(t, c.in, in)
+			require.Equal(t, c.res, res)
+			require.Equal(t, c.resOrig, orig)
+		})
 	}
 }
 
@@ -365,6 +373,8 @@ func noopLoop() loop {
 }
 
 func TestManagerApplyConfig(t *testing.T) {
+	t.Parallel()
+
 	// Valid initial configuration.
 	cfgText1 := `
 scrape_configs:
@@ -461,6 +471,8 @@ scrape_configs:
 }
 
 func TestManagerTargetsUpdates(t *testing.T) {
+	t.Parallel()
+
 	opts := Options{}
 	m := NewManager(&opts, nil, nil)
 
@@ -499,6 +511,8 @@ func TestManagerTargetsUpdates(t *testing.T) {
 }
 
 func TestSetJitter(t *testing.T) {
+	t.Parallel()
+
 	getConfig := func(prometheus string) *config.Config {
 		cfgText := `
 global:

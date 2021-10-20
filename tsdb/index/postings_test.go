@@ -26,6 +26,8 @@ import (
 )
 
 func TestMemPostings_addFor(t *testing.T) {
+	t.Parallel()
+
 	p := NewMemPostings()
 	p.m[allPostingsKey.Name] = map[string][]uint64{}
 	p.m[allPostingsKey.Name][allPostingsKey.Value] = []uint64{1, 2, 3, 4, 6, 7, 8}
@@ -36,6 +38,8 @@ func TestMemPostings_addFor(t *testing.T) {
 }
 
 func TestMemPostings_ensureOrder(t *testing.T) {
+	t.Parallel()
+
 	p := NewUnorderedMemPostings()
 	p.m["a"] = map[string][]uint64{}
 
@@ -64,6 +68,8 @@ func TestMemPostings_ensureOrder(t *testing.T) {
 }
 
 func TestIntersect(t *testing.T) {
+	t.Parallel()
+
 	a := newListPostings(1, 2, 3)
 	b := newListPostings(2, 3, 4)
 
@@ -155,7 +161,11 @@ func TestIntersect(t *testing.T) {
 	}
 
 	for _, c := range cases {
+		c := c
+
 		t.Run("", func(t *testing.T) {
+			t.Parallel()
+
 			if c.res == nil {
 				t.Fatal("intersect result expectancy cannot be nil")
 			}
@@ -182,6 +192,8 @@ func TestIntersect(t *testing.T) {
 }
 
 func TestMultiIntersect(t *testing.T) {
+	t.Parallel()
+
 	var cases = []struct {
 		p   [][]uint64
 		res []uint64
@@ -310,6 +322,8 @@ func BenchmarkIntersect(t *testing.B) {
 }
 
 func TestMultiMerge(t *testing.T) {
+	t.Parallel()
+
 	i1 := newListPostings(1, 2, 3, 4, 5, 6, 1000, 1001)
 	i2 := newListPostings(2, 4, 5, 6, 7, 8, 999, 1001)
 	i3 := newListPostings(1, 2, 5, 6, 7, 8, 1001, 1200)
@@ -320,6 +334,8 @@ func TestMultiMerge(t *testing.T) {
 }
 
 func TestMergedPostings(t *testing.T) {
+	t.Parallel()
+
 	var cases = []struct {
 		in []Postings
 
@@ -397,7 +413,11 @@ func TestMergedPostings(t *testing.T) {
 	}
 
 	for _, c := range cases {
+		c := c
+
 		t.Run("", func(t *testing.T) {
+			t.Parallel()
+
 			if c.res == nil {
 				t.Fatal("merge result expectancy cannot be nil")
 			}
@@ -424,6 +444,8 @@ func TestMergedPostings(t *testing.T) {
 }
 
 func TestMergedPostingsSeek(t *testing.T) {
+	t.Parallel()
+
 	var cases = []struct {
 		a, b []uint64
 
@@ -486,6 +508,8 @@ func TestMergedPostingsSeek(t *testing.T) {
 }
 
 func TestRemovedPostings(t *testing.T) {
+	t.Parallel()
+
 	var cases = []struct {
 		a, b []uint64
 		res  []uint64
@@ -539,6 +563,8 @@ func TestRemovedPostings(t *testing.T) {
 }
 
 func TestRemovedNextStackoverflow(t *testing.T) {
+	t.Parallel()
+
 	var full []uint64
 	var remove []uint64
 
@@ -561,6 +587,8 @@ func TestRemovedNextStackoverflow(t *testing.T) {
 }
 
 func TestRemovedPostingsSeek(t *testing.T) {
+	t.Parallel()
+
 	var cases = []struct {
 		a, b []uint64
 
@@ -647,6 +675,8 @@ func TestRemovedPostingsSeek(t *testing.T) {
 }
 
 func TestBigEndian(t *testing.T) {
+	t.Parallel()
+
 	num := 1000
 	// mock a list as postings
 	ls := make([]uint32, num)
@@ -662,6 +692,8 @@ func TestBigEndian(t *testing.T) {
 	}
 
 	t.Run("Iteration", func(t *testing.T) {
+		t.Parallel()
+
 		bep := newBigEndianPostings(beLst)
 		for i := 0; i < num; i++ {
 			require.True(t, bep.Next())
@@ -673,6 +705,8 @@ func TestBigEndian(t *testing.T) {
 	})
 
 	t.Run("Seek", func(t *testing.T) {
+		t.Parallel()
+
 		table := []struct {
 			seek  uint32
 			val   uint32
@@ -721,6 +755,8 @@ func TestBigEndian(t *testing.T) {
 }
 
 func TestIntersectWithMerge(t *testing.T) {
+	t.Parallel()
+
 	// One of the reproducible cases for:
 	// https://github.com/prometheus/prometheus/issues/2616
 	a := newListPostings(21, 22, 23, 24, 25, 30)
@@ -738,6 +774,8 @@ func TestIntersectWithMerge(t *testing.T) {
 }
 
 func TestWithoutPostings(t *testing.T) {
+	t.Parallel()
+
 	var cases = []struct {
 		base Postings
 		drop Postings
@@ -789,7 +827,11 @@ func TestWithoutPostings(t *testing.T) {
 	}
 
 	for _, c := range cases {
+		c := c
+
 		t.Run("", func(t *testing.T) {
+			t.Parallel()
+
 			if c.res == nil {
 				t.Fatal("without result expectancy cannot be nil")
 			}
@@ -849,6 +891,8 @@ func BenchmarkPostings_Stats(b *testing.B) {
 }
 
 func TestMemPostings_Delete(t *testing.T) {
+	t.Parallel()
+
 	p := NewMemPostings()
 	p.Add(1, labels.FromStrings("lbl1", "a"))
 	p.Add(2, labels.FromStrings("lbl1", "b"))

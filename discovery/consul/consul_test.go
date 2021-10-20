@@ -36,6 +36,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestConfiguredService(t *testing.T) {
+	t.Parallel()
+
 	conf := &SDConfig{
 		Services: []string{"configuredServiceName"}}
 	consulDiscovery, err := NewDiscovery(conf, nil)
@@ -52,6 +54,8 @@ func TestConfiguredService(t *testing.T) {
 }
 
 func TestConfiguredServiceWithTag(t *testing.T) {
+	t.Parallel()
+
 	conf := &SDConfig{
 		Services:    []string{"configuredServiceName"},
 		ServiceTags: []string{"http"},
@@ -76,6 +80,8 @@ func TestConfiguredServiceWithTag(t *testing.T) {
 }
 
 func TestConfiguredServiceWithTags(t *testing.T) {
+	t.Parallel()
+
 	type testcase struct {
 		// What we've configured to watch.
 		conf *SDConfig
@@ -166,6 +172,8 @@ func TestConfiguredServiceWithTags(t *testing.T) {
 }
 
 func TestNonConfiguredService(t *testing.T) {
+	t.Parallel()
+
 	conf := &SDConfig{}
 	consulDiscovery, err := NewDiscovery(conf, nil)
 
@@ -283,6 +291,8 @@ func checkOneTarget(t *testing.T, tg []*targetgroup.Group) {
 
 // Watch all the services in the catalog.
 func TestAllServices(t *testing.T) {
+	t.Parallel()
+
 	stub, config := newServer(t)
 	defer stub.Close()
 
@@ -302,6 +312,8 @@ func TestAllServices(t *testing.T) {
 
 // targetgroup with no targets is emitted if no services were discovered.
 func TestNoTargets(t *testing.T) {
+	t.Parallel()
+
 	stub, config := newServer(t)
 	defer stub.Close()
 	config.ServiceTags = []string{"missing"}
@@ -319,6 +331,8 @@ func TestNoTargets(t *testing.T) {
 
 // Watch only the test service.
 func TestOneService(t *testing.T) {
+	t.Parallel()
+
 	stub, config := newServer(t)
 	defer stub.Close()
 
@@ -334,6 +348,8 @@ func TestOneService(t *testing.T) {
 
 // Watch the test service with a specific tag and node-meta.
 func TestAllOptions(t *testing.T) {
+	t.Parallel()
+
 	stub, config := newServer(t)
 	defer stub.Close()
 
@@ -357,6 +373,8 @@ func TestAllOptions(t *testing.T) {
 }
 
 func TestGetDatacenterShouldReturnError(t *testing.T) {
+	t.Parallel()
+
 	for _, tc := range []struct {
 		handler    func(http.ResponseWriter, *http.Request)
 		errMessage string
@@ -401,6 +419,8 @@ func TestGetDatacenterShouldReturnError(t *testing.T) {
 }
 
 func TestUnmarshalConfig(t *testing.T) {
+	t.Parallel()
+
 	unmarshal := func(d []byte) func(interface{}) error {
 		return func(o interface{}) error {
 			return yaml.Unmarshal(d, o)
@@ -470,7 +490,11 @@ oauth2:
 	}
 
 	for _, test := range cases {
+		test := test
+
 		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
 			var config SDConfig
 			err := config.UnmarshalYAML(unmarshal([]byte(test.config)))
 			if err != nil {

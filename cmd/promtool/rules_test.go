@@ -67,7 +67,11 @@ func TestBackfillRuleIntegration(t *testing.T) {
 		{"one importer twice", 2, 8, 4, 8, []*model.SampleStream{{Metric: model.Metric{"name1": "val1"}, Values: []model.SamplePair{{Timestamp: testTime, Value: testValue}, {Timestamp: testTime2, Value: testValue2}}}}},
 	}
 	for _, tt := range testCases {
+		tt := tt
+
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			tmpDir, err := ioutil.TempDir("", "backfilldata")
 			require.NoError(t, err)
 			defer func() {

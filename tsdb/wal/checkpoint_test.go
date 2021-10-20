@@ -31,6 +31,8 @@ import (
 )
 
 func TestLastCheckpoint(t *testing.T) {
+	t.Parallel()
+
 	dir, err := ioutil.TempDir("", "test_checkpoint")
 	require.NoError(t, err)
 	defer func() {
@@ -78,6 +80,8 @@ func TestLastCheckpoint(t *testing.T) {
 }
 
 func TestDeleteCheckpoints(t *testing.T) {
+	t.Parallel()
+
 	dir, err := ioutil.TempDir("", "test_checkpoint")
 	require.NoError(t, err)
 	defer func() {
@@ -117,8 +121,14 @@ func TestDeleteCheckpoints(t *testing.T) {
 }
 
 func TestCheckpoint(t *testing.T) {
+	t.Parallel()
+
 	for _, compress := range []bool{false, true} {
+		compress := compress
+
 		t.Run(fmt.Sprintf("compress=%t", compress), func(t *testing.T) {
+			t.Parallel()
+
 			dir, err := ioutil.TempDir("", "test_checkpoint")
 			require.NoError(t, err)
 			defer func() {
@@ -239,6 +249,8 @@ func TestCheckpoint(t *testing.T) {
 }
 
 func TestCheckpointNoTmpFolderAfterError(t *testing.T) {
+	t.Parallel()
+
 	// Create a new wal with invalid data.
 	dir, err := ioutil.TempDir("", "test_checkpoint")
 	require.NoError(t, err)

@@ -37,6 +37,7 @@ func TestMain(m *testing.M) {
 
 // TestTargetUpdatesOrder checks that the target updates are received in the expected order.
 func TestTargetUpdatesOrder(t *testing.T) {
+	t.Parallel()
 
 	// The order by which the updates are send is determined by the interval passed to the mock discovery adapter
 	// Final targets array is ordered alphabetically by the name of the discoverer.
@@ -661,6 +662,8 @@ func TestTargetUpdatesOrder(t *testing.T) {
 	for i, tc := range testCases {
 		tc := tc
 		t.Run(tc.title, func(t *testing.T) {
+			t.Parallel()
+
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
 
@@ -781,6 +784,8 @@ func pk(provider, setName string, n int) poolKey {
 }
 
 func TestTargetSetTargetGroupsPresentOnConfigReload(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	discoveryManager := NewManager(ctx, log.NewNopLogger())
@@ -813,6 +818,8 @@ func TestTargetSetTargetGroupsPresentOnConfigReload(t *testing.T) {
 }
 
 func TestTargetSetTargetGroupsPresentOnConfigRename(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	discoveryManager := NewManager(ctx, log.NewNopLogger())
@@ -848,6 +855,8 @@ func TestTargetSetTargetGroupsPresentOnConfigRename(t *testing.T) {
 }
 
 func TestTargetSetTargetGroupsPresentOnConfigDuplicateAndDeleteOriginal(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	discoveryManager := NewManager(ctx, log.NewNopLogger())
@@ -886,6 +895,8 @@ func TestTargetSetTargetGroupsPresentOnConfigDuplicateAndDeleteOriginal(t *testi
 }
 
 func TestTargetSetTargetGroupsPresentOnConfigChange(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	discoveryManager := NewManager(ctx, log.NewNopLogger())
@@ -947,6 +958,8 @@ func TestTargetSetTargetGroupsPresentOnConfigChange(t *testing.T) {
 }
 
 func TestTargetSetRecreatesTargetGroupsOnConfigChange(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	discoveryManager := NewManager(ctx, log.NewNopLogger())
@@ -986,6 +999,8 @@ func TestTargetSetRecreatesTargetGroupsOnConfigChange(t *testing.T) {
 }
 
 func TestDiscovererConfigs(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	discoveryManager := NewManager(ctx, log.NewNopLogger())
@@ -1018,6 +1033,8 @@ func TestDiscovererConfigs(t *testing.T) {
 // removing all targets from the static_configs sends an update with empty targetGroups.
 // This is required to signal the receiver that this target set has no current targets.
 func TestTargetSetRecreatesEmptyStaticConfigs(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	discoveryManager := NewManager(ctx, log.NewNopLogger())
@@ -1066,6 +1083,8 @@ func TestTargetSetRecreatesEmptyStaticConfigs(t *testing.T) {
 }
 
 func TestIdenticalConfigurationsAreCoalesced(t *testing.T) {
+	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	discoveryManager := NewManager(ctx, nil)
@@ -1096,6 +1115,8 @@ func TestIdenticalConfigurationsAreCoalesced(t *testing.T) {
 }
 
 func TestApplyConfigDoesNotModifyStaticTargets(t *testing.T) {
+	t.Parallel()
+
 	originalConfig := Configs{
 		staticConfig("foo:9090", "bar:9090", "baz:9090"),
 	}
@@ -1147,6 +1168,7 @@ func (s lockStaticDiscoverer) Run(ctx context.Context, up chan<- []*targetgroup.
 	}
 }
 
+//nolint:paralleltest // TODO This test use global variable metrics, so it may interfere with other tests.
 func TestGaugeFailedConfigs(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -1183,6 +1205,8 @@ func TestGaugeFailedConfigs(t *testing.T) {
 }
 
 func TestCoordinationWithReceiver(t *testing.T) {
+	t.Parallel()
+
 	updateDelay := 100 * time.Millisecond
 
 	type expect struct {
@@ -1304,6 +1328,8 @@ func TestCoordinationWithReceiver(t *testing.T) {
 	for _, tc := range testCases {
 		tc := tc
 		t.Run(tc.title, func(t *testing.T) {
+			t.Parallel()
+
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
 
