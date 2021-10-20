@@ -50,6 +50,8 @@ func urlMustParse(str string) *url.URL {
 }
 
 func TestMakeXDSResourceHttpEndpointEmptyServerURLScheme(t *testing.T) {
+	t.Parallel()
+
 	endpointURL, err := makeXDSResourceHTTPEndpointURL(ProtocolV3, urlMustParse("127.0.0.1"), "monitoring")
 
 	require.Empty(t, endpointURL)
@@ -58,6 +60,8 @@ func TestMakeXDSResourceHttpEndpointEmptyServerURLScheme(t *testing.T) {
 }
 
 func TestMakeXDSResourceHttpEndpointEmptyServerURLHost(t *testing.T) {
+	t.Parallel()
+
 	endpointURL, err := makeXDSResourceHTTPEndpointURL(ProtocolV3, urlMustParse("grpc://127.0.0.1"), "monitoring")
 
 	require.Empty(t, endpointURL)
@@ -66,6 +70,8 @@ func TestMakeXDSResourceHttpEndpointEmptyServerURLHost(t *testing.T) {
 }
 
 func TestMakeXDSResourceHttpEndpoint(t *testing.T) {
+	t.Parallel()
+
 	endpointURL, err := makeXDSResourceHTTPEndpointURL(ProtocolV3, urlMustParse("http://127.0.0.1:5000"), "monitoring")
 
 	require.NoError(t, err)
@@ -73,6 +79,8 @@ func TestMakeXDSResourceHttpEndpoint(t *testing.T) {
 }
 
 func TestCreateNewHTTPResourceClient(t *testing.T) {
+	t.Parallel()
+
 	c := &HTTPResourceClientConfig{
 		HTTPClientConfig: sdConf.HTTPClientConfig,
 		Name:             "test",
@@ -110,6 +118,8 @@ func createTestHTTPResourceClient(t *testing.T, conf *HTTPResourceClientConfig, 
 }
 
 func TestHTTPResourceClientFetchEmptyResponse(t *testing.T) {
+	t.Parallel()
+
 	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf, ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
 		return nil, nil
 	})
@@ -121,6 +131,8 @@ func TestHTTPResourceClientFetchEmptyResponse(t *testing.T) {
 }
 
 func TestHTTPResourceClientFetchFullResponse(t *testing.T) {
+	t.Parallel()
+
 	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf, ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
 		if request.VersionInfo == "1" {
 			return nil, nil
@@ -150,6 +162,8 @@ func TestHTTPResourceClientFetchFullResponse(t *testing.T) {
 }
 
 func TestHTTPResourceClientServerError(t *testing.T) {
+	t.Parallel()
+
 	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf, ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
 		return nil, errors.New("server error")
 	})

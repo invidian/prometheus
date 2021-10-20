@@ -83,6 +83,8 @@ func newTritonDiscovery(c SDConfig) (*Discovery, error) {
 }
 
 func TestTritonSDNew(t *testing.T) {
+	t.Parallel()
+
 	td, err := newTritonDiscovery(conf)
 	require.NoError(t, err)
 	require.NotNil(t, td)
@@ -96,12 +98,16 @@ func TestTritonSDNew(t *testing.T) {
 }
 
 func TestTritonSDNewBadConfig(t *testing.T) {
+	t.Parallel()
+
 	td, err := newTritonDiscovery(badconf)
 	require.Error(t, err)
 	require.Nil(t, td)
 }
 
 func TestTritonSDNewGroupsConfig(t *testing.T) {
+	t.Parallel()
+
 	td, err := newTritonDiscovery(groupsconf)
 	require.NoError(t, err)
 	require.NotNil(t, td)
@@ -116,6 +122,8 @@ func TestTritonSDNewGroupsConfig(t *testing.T) {
 }
 
 func TestTritonSDNewCNConfig(t *testing.T) {
+	t.Parallel()
+
 	td, err := newTritonDiscovery(cnconf)
 	require.NoError(t, err)
 	require.NotNil(t, td)
@@ -130,11 +138,15 @@ func TestTritonSDNewCNConfig(t *testing.T) {
 }
 
 func TestTritonSDRefreshNoTargets(t *testing.T) {
+	t.Parallel()
+
 	tgts := testTritonSDRefresh(t, conf, "{\"containers\":[]}")
 	require.Nil(t, tgts)
 }
 
 func TestTritonSDRefreshMultipleTargets(t *testing.T) {
+	t.Parallel()
+
 	var (
 		dstr = `{"containers":[
 		 	{
@@ -161,6 +173,8 @@ func TestTritonSDRefreshMultipleTargets(t *testing.T) {
 }
 
 func TestTritonSDRefreshNoServer(t *testing.T) {
+	t.Parallel()
+
 	var (
 		td, _ = newTritonDiscovery(conf)
 	)
@@ -171,6 +185,8 @@ func TestTritonSDRefreshNoServer(t *testing.T) {
 }
 
 func TestTritonSDRefreshCancelled(t *testing.T) {
+	t.Parallel()
+
 	var (
 		td, _ = newTritonDiscovery(conf)
 	)
@@ -183,6 +199,8 @@ func TestTritonSDRefreshCancelled(t *testing.T) {
 }
 
 func TestTritonSDRefreshCNsUUIDOnly(t *testing.T) {
+	t.Parallel()
+
 	var (
 		dstr = `{"cns":[
 		 	{
@@ -200,6 +218,8 @@ func TestTritonSDRefreshCNsUUIDOnly(t *testing.T) {
 }
 
 func TestTritonSDRefreshCNsWithHostname(t *testing.T) {
+	t.Parallel()
+
 	var (
 		dstr = `{"cns":[
 		 	{

@@ -18,6 +18,7 @@ import (
 	"math"
 	"math/rand"
 	"os"
+	"strconv"
 	"sync"
 	"testing"
 	"time"
@@ -32,6 +33,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestWriteAndReadbackTombstones(t *testing.T) {
+	t.Parallel()
+
 	tmpdir, _ := ioutil.TempDir("", "test")
 	defer func() {
 		require.NoError(t, os.RemoveAll(tmpdir))
@@ -64,6 +67,8 @@ func TestWriteAndReadbackTombstones(t *testing.T) {
 }
 
 func TestDeletingTombstones(t *testing.T) {
+	t.Parallel()
+
 	stones := NewMemTombstones()
 
 	ref := uint64(42)
@@ -85,6 +90,8 @@ func TestDeletingTombstones(t *testing.T) {
 }
 
 func TestTruncateBefore(t *testing.T) {
+	t.Parallel()
+
 	cases := []struct {
 		before  Intervals
 		beforeT int64
@@ -124,6 +131,8 @@ func TestTruncateBefore(t *testing.T) {
 }
 
 func TestAddingNewIntervals(t *testing.T) {
+	t.Parallel()
+
 	cases := []struct {
 		exist Intervals
 		new   Interval
@@ -215,8 +224,12 @@ func TestAddingNewIntervals(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		t.Run("", func(t *testing.T) {
+	for i, c := range cases {
+		c := c
+
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
+			t.Parallel()
+
 			require.Equal(t, c.exp, c.exist.Add(c.new))
 		})
 	}
@@ -224,6 +237,8 @@ func TestAddingNewIntervals(t *testing.T) {
 
 // TestMemTombstonesConcurrency to make sure they are safe to access from different goroutines.
 func TestMemTombstonesConcurrency(t *testing.T) {
+	t.Parallel()
+
 	tomb := NewMemTombstones()
 	totalRuns := 100
 	var wg sync.WaitGroup

@@ -27,6 +27,8 @@ import (
 )
 
 func TestDeriv(t *testing.T) {
+	t.Parallel()
+
 	// https://github.com/prometheus/prometheus/issues/2674#issuecomment-315439393
 	// This requires more precision than the usual test system offers,
 	// so we test it by hand.
@@ -60,6 +62,8 @@ func TestDeriv(t *testing.T) {
 }
 
 func TestFunctionList(t *testing.T) {
+	t.Parallel()
+
 	// Test that Functions and parser.Functions list the same functions.
 	for i := range FunctionCalls {
 		_, ok := parser.Functions[i]

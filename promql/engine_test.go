@@ -36,7 +36,7 @@ func TestMain(m *testing.M) {
 	goleak.VerifyTestMain(m)
 }
 
-func TestQueryConcurrency(t *testing.T) {
+func TestQueryConcurrency(t *testing.T) { //nolint:paralleltest // TODO: Fails while running in parallel.
 	maxConcurrency := 10
 
 	dir, err := ioutil.TempDir("", "test_concurrency")
@@ -103,6 +103,8 @@ func TestQueryConcurrency(t *testing.T) {
 }
 
 func TestQueryTimeout(t *testing.T) {
+	t.Parallel()
+
 	opts := EngineOpts{
 		Logger:     nil,
 		Reg:        nil,
@@ -128,6 +130,8 @@ func TestQueryTimeout(t *testing.T) {
 const errQueryCanceled = ErrQueryCanceled("test statement execution")
 
 func TestQueryCancel(t *testing.T) {
+	t.Parallel()
+
 	opts := EngineOpts{
 		Logger:     nil,
 		Reg:        nil,
@@ -200,6 +204,8 @@ func (e errSeriesSet) Err() error                 { return e.err }
 func (e errSeriesSet) Warnings() storage.Warnings { return nil }
 
 func TestQueryError(t *testing.T) {
+	t.Parallel()
+
 	opts := EngineOpts{
 		Logger:     nil,
 		Reg:        nil,
@@ -249,6 +255,8 @@ func (h *hintRecordingQuerier) Select(sortSeries bool, hints *storage.SelectHint
 }
 
 func TestSelectHintsSetCorrectly(t *testing.T) {
+	t.Parallel()
+
 	opts := EngineOpts{
 		Logger:           nil,
 		Reg:              nil,
@@ -539,7 +547,10 @@ func TestSelectHintsSetCorrectly(t *testing.T) {
 		},
 	},
 	} {
+		tc := tc
 		t.Run(tc.query, func(t *testing.T) {
+			t.Parallel()
+
 			engine := NewEngine(opts)
 			hintsRecorder := &noopHintRecordingQueryable{}
 
@@ -564,6 +575,8 @@ func TestSelectHintsSetCorrectly(t *testing.T) {
 }
 
 func TestEngineShutdown(t *testing.T) {
+	t.Parallel()
+
 	opts := EngineOpts{
 		Logger:     nil,
 		Reg:        nil,
@@ -618,6 +631,8 @@ func TestEngineShutdown(t *testing.T) {
 }
 
 func TestEngineEvalStmtTimestamps(t *testing.T) {
+	t.Parallel()
+
 	test, err := NewTest(t, `
 load 10s
   metric 1 2
@@ -717,6 +732,8 @@ load 10s
 }
 
 func TestMaxQuerySamples(t *testing.T) {
+	t.Parallel()
+
 	test, err := NewTest(t, `
 load 10s
   metric 1+1x100
@@ -851,6 +868,7 @@ load 10s
 	}
 
 	engine := test.QueryEngine()
+	//nolint:paralleltest // TODO: Check how tests can be parallelized.
 	for _, c := range cases {
 		t.Run(c.Query, func(t *testing.T) {
 			testFunc := func(expError error) {
@@ -879,6 +897,8 @@ load 10s
 }
 
 func TestAtModifier(t *testing.T) {
+	t.Parallel()
+
 	test, err := NewTest(t, `
 load 10s
   metric{job="1"} 0+1x1000
@@ -891,7 +911,7 @@ load 1ms
   metric_ms 0+1x10000
 `)
 	require.NoError(t, err)
-	defer test.Close()
+	t.Cleanup(func() { test.Close() })
 
 	err = test.Run()
 	require.NoError(t, err)
@@ -1085,7 +1105,10 @@ load 1ms
 	}
 
 	for _, c := range cases {
+		c := c
 		t.Run(c.query, func(t *testing.T) {
+			t.Parallel()
+
 			if c.interval == 0 {
 				c.interval = 1
 			}
@@ -1111,6 +1134,8 @@ load 1ms
 }
 
 func TestRecoverEvaluatorRuntime(t *testing.T) {
+	t.Parallel()
+
 	ev := &evaluator{logger: log.NewNopLogger()}
 
 	var err error
@@ -1125,6 +1150,8 @@ func TestRecoverEvaluatorRuntime(t *testing.T) {
 }
 
 func TestRecoverEvaluatorError(t *testing.T) {
+	t.Parallel()
+
 	ev := &evaluator{logger: log.NewNopLogger()}
 	var err error
 
@@ -1139,6 +1166,8 @@ func TestRecoverEvaluatorError(t *testing.T) {
 }
 
 func TestRecoverEvaluatorErrorWithWarnings(t *testing.T) {
+	t.Parallel()
+
 	ev := &evaluator{logger: log.NewNopLogger()}
 	var err error
 	var ws storage.Warnings
@@ -1159,12 +1188,15 @@ func TestRecoverEvaluatorErrorWithWarnings(t *testing.T) {
 }
 
 func TestSubquerySelector(t *testing.T) {
+	t.Parallel()
+
 	type caseType struct {
 		Query  string
 		Result Result
 		Start  time.Time
 	}
 
+	//nolint:paralleltest // False positive complaining about not initializing c which is nested variable.
 	for _, tst := range []struct {
 		loadString string
 		cases      []caseType
@@ -1379,15 +1411,23 @@ func TestSubquerySelector(t *testing.T) {
 			},
 		},
 	} {
+		tst := tst
+
 		t.Run("", func(t *testing.T) {
+			t.Parallel()
+
 			test, err := NewTest(t, tst.loadString)
 			require.NoError(t, err)
-			defer test.Close()
+			t.Cleanup(func() { test.Close() })
 
 			require.NoError(t, test.Run())
 			engine := test.QueryEngine()
 			for _, c := range tst.cases {
+				c := c
+
 				t.Run(c.Query, func(t *testing.T) {
+					t.Parallel()
+
 					qry, err := engine.NewInstantQuery(test.Queryable(), c.Query, c.Start)
 					require.NoError(t, err)
 
@@ -1425,6 +1465,8 @@ func (f *FakeQueryLogger) Log(l ...interface{}) error {
 }
 
 func TestQueryLogger_basic(t *testing.T) {
+	t.Parallel()
+
 	opts := EngineOpts{
 		Logger:     nil,
 		Reg:        nil,
@@ -1476,6 +1518,8 @@ func TestQueryLogger_basic(t *testing.T) {
 }
 
 func TestQueryLogger_fields(t *testing.T) {
+	t.Parallel()
+
 	opts := EngineOpts{
 		Logger:     nil,
 		Reg:        nil,
@@ -1505,6 +1549,8 @@ func TestQueryLogger_fields(t *testing.T) {
 }
 
 func TestQueryLogger_error(t *testing.T) {
+	t.Parallel()
+
 	opts := EngineOpts{
 		Logger:     nil,
 		Reg:        nil,
@@ -1533,6 +1579,8 @@ func TestQueryLogger_error(t *testing.T) {
 }
 
 func TestPreprocessAndWrapWithStepInvariantExpr(t *testing.T) {
+	t.Parallel()
+
 	startTime := time.Unix(1000, 0)
 	endTime := time.Unix(9999, 0)
 	var testCases = []struct {
@@ -2241,7 +2289,11 @@ func TestPreprocessAndWrapWithStepInvariantExpr(t *testing.T) {
 	}
 
 	for _, test := range testCases {
+		test := test
+
 		t.Run(test.input, func(t *testing.T) {
+			t.Parallel()
+
 			expr, err := parser.ParseExpr(test.input)
 			require.NoError(t, err)
 			expr = PreprocessExpr(expr, startTime, endTime)
@@ -2251,6 +2303,8 @@ func TestPreprocessAndWrapWithStepInvariantExpr(t *testing.T) {
 }
 
 func TestEngineOptsValidation(t *testing.T) {
+	t.Parallel()
+
 	cases := []struct {
 		opts     EngineOpts
 		query    string
@@ -2323,6 +2377,8 @@ func TestEngineOptsValidation(t *testing.T) {
 }
 
 func TestRangeQuery(t *testing.T) {
+	t.Parallel()
+
 	cases := []struct {
 		Name     string
 		Load     string
@@ -2438,7 +2494,11 @@ func TestRangeQuery(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
+		c := c
+
 		t.Run(c.Name, func(t *testing.T) {
+			t.Parallel()
+
 			test, err := NewTest(t, c.Load)
 			require.NoError(t, err)
 			defer test.Close()

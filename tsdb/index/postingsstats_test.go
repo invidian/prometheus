@@ -19,6 +19,8 @@ import (
 )
 
 func TestPostingsStats(t *testing.T) {
+	t.Parallel()
+
 	stats := &maxHeap{}
 	max := 3000000
 	heapLength := 10
@@ -41,6 +43,8 @@ func TestPostingsStats(t *testing.T) {
 }
 
 func TestPostingsStats2(t *testing.T) {
+	t.Parallel()
+
 	stats := &maxHeap{}
 	heapLength := 10
 

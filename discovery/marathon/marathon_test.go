@@ -44,6 +44,8 @@ func testUpdateServices(client appListClient) ([]*targetgroup.Group, error) {
 }
 
 func TestMarathonSDHandleError(t *testing.T) {
+	t.Parallel()
+
 	var (
 		errTesting = errors.New("testing failure")
 		client     = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
@@ -60,6 +62,8 @@ func TestMarathonSDHandleError(t *testing.T) {
 }
 
 func TestMarathonSDEmptyList(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) { return &appList{}, nil }
 	)
@@ -99,6 +103,8 @@ func marathonTestAppList(labels map[string]string, runningTasks int) *appList {
 }
 
 func TestMarathonSDSendGroup(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestAppList(marathonValidLabel, 1), nil
@@ -130,6 +136,8 @@ func TestMarathonSDSendGroup(t *testing.T) {
 }
 
 func TestMarathonSDRemoveApp(t *testing.T) {
+	t.Parallel()
+
 	md, err := NewDiscovery(conf, nil)
 	if err != nil {
 		t.Fatalf("%s", err)
@@ -195,6 +203,8 @@ func marathonTestAppListWithMultiplePorts(labels map[string]string, runningTasks
 }
 
 func TestMarathonSDSendGroupWithMultiplePort(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestAppListWithMultiplePorts(marathonValidLabel, 1), nil
@@ -254,6 +264,8 @@ func marathonTestZeroTaskPortAppList(labels map[string]string, runningTasks int)
 }
 
 func TestMarathonZeroTaskPorts(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestZeroTaskPortAppList(marathonValidLabel, 1), nil
@@ -277,6 +289,8 @@ func TestMarathonZeroTaskPorts(t *testing.T) {
 }
 
 func Test500ErrorHttpResponseWithValidJSONBody(t *testing.T) {
+	t.Parallel()
+
 	// Simulate 500 error with a valid JSON response.
 	respHandler := func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -331,6 +345,8 @@ func marathonTestAppListWithPortDefinitions(labels map[string]string, runningTas
 }
 
 func TestMarathonSDSendGroupWithPortDefinitions(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestAppListWithPortDefinitions(marathonValidLabel, 1), nil
@@ -403,6 +419,8 @@ func marathonTestAppListWithPortDefinitionsRequirePorts(labels map[string]string
 }
 
 func TestMarathonSDSendGroupWithPortDefinitionsRequirePorts(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestAppListWithPortDefinitionsRequirePorts(marathonValidLabel, 1), nil
@@ -470,6 +488,8 @@ func marathonTestAppListWithPorts(labels map[string]string, runningTasks int) *a
 }
 
 func TestMarathonSDSendGroupWithPorts(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestAppListWithPorts(marathonValidLabel, 1), nil
@@ -546,6 +566,8 @@ func marathonTestAppListWithContainerPortMappings(labels map[string]string, runn
 }
 
 func TestMarathonSDSendGroupWithContainerPortMappings(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestAppListWithContainerPortMappings(marathonValidLabel, 1), nil
@@ -622,6 +644,8 @@ func marathonTestAppListWithDockerContainerPortMappings(labels map[string]string
 }
 
 func TestMarathonSDSendGroupWithDockerContainerPortMappings(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestAppListWithDockerContainerPortMappings(marathonValidLabel, 1), nil
@@ -702,6 +726,8 @@ func marathonTestAppListWithContainerNetworkAndPortMappings(labels map[string]st
 }
 
 func TestMarathonSDSendGroupWithContainerNetworkAndPortMapping(t *testing.T) {
+	t.Parallel()
+
 	var (
 		client = func(_ context.Context, _ *http.Client, _ string) (*appList, error) {
 			return marathonTestAppListWithContainerNetworkAndPortMappings(marathonValidLabel, 1), nil
