@@ -1,16 +1,24 @@
 run:
   deadline: 5m
 
+output:
+  sort-results: true
+
 linters:
   enable:
     - depguard
     - golint
+    - paralleltest
 
 issues:
   exclude-rules:
     - path: _test.go
       linters:
         - errcheck
+    # False positive: https://github.com/kunwardeep/paralleltest/issues/8.
+    - linters:
+        - paralleltest
+      text: "does not use range value in test Run"
 
 linters-settings:
   depguard:
