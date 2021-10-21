@@ -261,22 +261,23 @@ func (notReadyReadStorage) Stats(string) (*tsdb.Stats, error) {
 func TestFederation_NotReady(t *testing.T) {
 	t.Parallel()
 
-	h := &Handler{
-		localStorage:  notReadyReadStorage{},
-		lookbackDelta: 5 * time.Minute,
-		now:           func() model.Time { return 101 * 60 * 1000 }, // 101min after epoch.
-		config: &config.Config{
-			GlobalConfig: config.GlobalConfig{},
-		},
-	}
-
 	for name, scenario := range scenarios {
 		scenario := scenario
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			h.config.GlobalConfig.ExternalLabels = scenario.externalLabels
+			h := &Handler{
+				localStorage:  notReadyReadStorage{},
+				lookbackDelta: 5 * time.Minute,
+				now:           func() model.Time { return 101 * 60 * 1000 }, // 101min after epoch.
+				config: &config.Config{
+					GlobalConfig: config.GlobalConfig{
+						ExternalLabels: scenario.externalLabels,
+					},
+				},
+			}
+
 			req := httptest.NewRequest("GET", "http://example.org/federate?"+scenario.params, nil)
 			res := httptest.NewRecorder()
 

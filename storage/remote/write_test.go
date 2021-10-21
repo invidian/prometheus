@@ -30,15 +30,17 @@ import (
 	"github.com/prometheus/prometheus/pkg/relabel"
 )
 
-var cfg = config.RemoteWriteConfig{
-	Name: "dev",
-	URL: &common_config.URL{
-		URL: &url.URL{
-			Scheme: "http",
-			Host:   "localhost",
+func cfg() *config.RemoteWriteConfig {
+	return &config.RemoteWriteConfig{
+		Name: "dev",
+		URL: &common_config.URL{
+			URL: &url.URL{
+				Scheme: "http",
+				Host:   "localhost",
+			},
 		},
-	},
-	QueueConfig: config.DefaultQueueConfig,
+		QueueConfig: config.DefaultQueueConfig,
+	}
 }
 
 func TestNoDuplicateWriteConfigs(t *testing.T) {
@@ -140,14 +142,17 @@ func TestRestartOnNameChange(t *testing.T) {
 		require.NoError(t, os.RemoveAll(dir))
 	}()
 
+	cfg := cfg()
+
 	hash, err := toHash(cfg)
 	require.NoError(t, err)
 
 	s := NewWriteStorage(nil, nil, dir, time.Millisecond, nil)
+
 	conf := &config.Config{
 		GlobalConfig: config.DefaultGlobalConfig,
 		RemoteWriteConfigs: []*config.RemoteWriteConfig{
-			&cfg,
+			cfg,
 		},
 	}
 	require.NoError(t, s.ApplyConfig(conf))
@@ -248,7 +253,7 @@ func TestUpdateExternalLabels(t *testing.T) {
 	conf := &config.Config{
 		GlobalConfig: config.GlobalConfig{},
 		RemoteWriteConfigs: []*config.RemoteWriteConfig{
-			&cfg,
+			cfg(),
 		},
 	}
 	hash, err := toHash(conf.RemoteWriteConfigs[0])
@@ -282,22 +287,27 @@ func TestWriteStorageApplyConfigsIdempotent(t *testing.T) {
 	conf := &config.Config{
 		GlobalConfig: config.GlobalConfig{},
 		RemoteWriteConfigs: []*config.RemoteWriteConfig{
-			&config.DefaultRemoteWriteConfig,
-		},
-	}
-	// We need to set URL's so that metric creation doesn't panic.
-	conf.RemoteWriteConfigs[0].URL = &common_config.URL{
-		URL: &url.URL{
-			Host: "http://test-storage.com",
+			{
+				RemoteTimeout:    config.DefaultRemoteWriteConfig.RemoteTimeout,
+				QueueConfig:      config.DefaultRemoteWriteConfig.QueueConfig,
+				MetadataConfig:   config.DefaultRemoteWriteConfig.MetadataConfig,
+				HTTPClientConfig: config.DefaultRemoteWriteConfig.HTTPClientConfig,
+				// We need to set URL's so that metric creation doesn't panic.
+				URL: &common_config.URL{
+					URL: &url.URL{
+						Host: "http://test-storage.com",
+					},
+				},
+			},
 		},
 	}
 	hash, err := toHash(conf.RemoteWriteConfigs[0])
 	require.NoError(t, err)
 
-	s.ApplyConfig(conf)
+	require.NoError(t, s.ApplyConfig(conf))
 	require.Equal(t, 1, len(s.queues))
 
-	s.ApplyConfig(conf)
+	require.NoError(t, s.ApplyConfig(conf))
 	require.Equal(t, 1, len(s.queues))
 	_, hashExists := s.queues[hash]
 	require.True(t, hashExists, "Queue pointer should have remained the same")
