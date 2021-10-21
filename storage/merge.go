@@ -104,7 +104,7 @@ func (q *mergeGenericQuerier) Select(sortSeries bool, hints *SelectHints, matche
 		return q.queriers[0].Select(sortSeries, hints, matchers...)
 	}
 
-	var seriesSets = make([]genericSeriesSet, 0, len(q.queriers))
+	seriesSets := make([]genericSeriesSet, 0, len(q.queriers))
 	if !q.concurrentSelect {
 		for _, querier := range q.queriers {
 			// We need to sort for merge  to work.
@@ -265,7 +265,6 @@ func NewMergeSeriesSet(sets []SeriesSet, mergeFunc VerticalSeriesMergeFunc) Seri
 	genericSets := make([]genericSeriesSet, 0, len(sets))
 	for _, s := range sets {
 		genericSets = append(genericSets, &genericSeriesSetAdapter{s})
-
 	}
 	return &seriesSetAdapter{newGenericMergeSeriesSet(genericSets, (&seriesMergerAdapter{VerticalSeriesMergeFunc: mergeFunc}).Merge)}
 }
@@ -281,7 +280,6 @@ func NewMergeChunkSeriesSet(sets []ChunkSeriesSet, mergeFunc VerticalChunkSeries
 	genericSets := make([]genericSeriesSet, 0, len(sets))
 	for _, s := range sets {
 		genericSets = append(genericSets, &genericChunkSeriesSetAdapter{s})
-
 	}
 	return &chunkSeriesSetAdapter{newGenericMergeSeriesSet(genericSets, (&chunkSeriesMergerAdapter{VerticalChunkSeriesMergeFunc: mergeFunc}).Merge)}
 }

@@ -41,7 +41,6 @@ func httpResourceConf() *HTTPResourceClientConfig {
 
 func urlMustParse(str string) *url.URL {
 	parsed, err := url.Parse(str)
-
 	if err != nil {
 		panic(err)
 	}
@@ -100,7 +99,6 @@ func TestCreateNewHTTPResourceClient(t *testing.T) {
 
 	require.Equal(t, client.endpoint, "http://127.0.0.1:5000/v3/discovery:monitoring?param1=v1")
 	require.Equal(t, client.client.Timeout, 1*time.Minute)
-
 }
 
 func createTestHTTPResourceClient(t *testing.T, conf *HTTPResourceClientConfig, protocolVersion ProtocolVersion, responder discoveryResponder) (*HTTPResourceClient, func()) {

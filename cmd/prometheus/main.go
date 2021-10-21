@@ -22,7 +22,9 @@ import (
 	"math/bits"
 	"net"
 	"net/http"
-	_ "net/http/pprof" // Comment this line to disable pprof endpoint.
+
+	//  Comment this line to disable pprof endpoint.
+	_ "net/http/pprof"
 	"net/url"
 	"os"
 	"os/signal"
@@ -57,7 +59,9 @@ import (
 
 	"github.com/prometheus/prometheus/config"
 	"github.com/prometheus/prometheus/discovery"
-	_ "github.com/prometheus/prometheus/discovery/install" // Register service discovery implementations.
+
+	//  Register service discovery implementations.
+	_ "github.com/prometheus/prometheus/discovery/install"
 	"github.com/prometheus/prometheus/discovery/legacymanager"
 	"github.com/prometheus/prometheus/discovery/targetgroup"
 	"github.com/prometheus/prometheus/notifier"
@@ -557,7 +561,7 @@ func main() {
 	)
 
 	// This is passed to ruleManager.Update().
-	var externalURL = cfg.web.ExternalURL.String()
+	externalURL := cfg.web.ExternalURL.String()
 
 	reloaders := []reloader{
 		{
@@ -779,7 +783,6 @@ func main() {
 						return nil
 					}
 				}
-
 			},
 			func(err error) {
 				// Wait for any in-progress reloads to complete to avoid
@@ -977,6 +980,7 @@ type safePromQLNoStepSubqueryInterval struct {
 func durationToInt64Millis(d time.Duration) int64 {
 	return int64(d / time.Millisecond)
 }
+
 func (i *safePromQLNoStepSubqueryInterval) Set(ev model.Duration) {
 	i.value.Store(durationToInt64Millis(time.Duration(ev)))
 }

@@ -147,8 +147,7 @@ func TestTritonSDRefreshNoTargets(t *testing.T) {
 func TestTritonSDRefreshMultipleTargets(t *testing.T) {
 	t.Parallel()
 
-	var (
-		dstr = `{"containers":[
+	dstr := `{"containers":[
 		 	{
                                 "groups":["foo","bar","baz"],
 				"server_uuid":"44454c4c-5000-104d-8037-b7c04f5a5131",
@@ -165,7 +164,6 @@ func TestTritonSDRefreshMultipleTargets(t *testing.T) {
 				"vm_uuid":"7b27a514-89d7-11e6-bee6-3f96f367bee7"
 			}]
 		}`
-	)
 
 	tgts := testTritonSDRefresh(t, conf, dstr)
 	require.NotNil(t, tgts)
@@ -175,9 +173,7 @@ func TestTritonSDRefreshMultipleTargets(t *testing.T) {
 func TestTritonSDRefreshNoServer(t *testing.T) {
 	t.Parallel()
 
-	var (
-		td, _ = newTritonDiscovery(conf)
-	)
+	td, _ := newTritonDiscovery(conf)
 
 	_, err := td.refresh(context.Background())
 	require.Error(t, err)
@@ -187,9 +183,7 @@ func TestTritonSDRefreshNoServer(t *testing.T) {
 func TestTritonSDRefreshCancelled(t *testing.T) {
 	t.Parallel()
 
-	var (
-		td, _ = newTritonDiscovery(conf)
-	)
+	td, _ := newTritonDiscovery(conf)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
@@ -201,8 +195,7 @@ func TestTritonSDRefreshCancelled(t *testing.T) {
 func TestTritonSDRefreshCNsUUIDOnly(t *testing.T) {
 	t.Parallel()
 
-	var (
-		dstr = `{"cns":[
+	dstr := `{"cns":[
 		 	{
 				"server_uuid":"44454c4c-5000-104d-8037-b7c04f5a5131"
 			},
@@ -210,7 +203,6 @@ func TestTritonSDRefreshCNsUUIDOnly(t *testing.T) {
 				"server_uuid":"a5894692-bd32-4ca1-908a-e2dda3c3a5e6"
 			}]
 		}`
-	)
 
 	tgts := testTritonSDRefresh(t, cnconf, dstr)
 	require.NotNil(t, tgts)
@@ -220,8 +212,7 @@ func TestTritonSDRefreshCNsUUIDOnly(t *testing.T) {
 func TestTritonSDRefreshCNsWithHostname(t *testing.T) {
 	t.Parallel()
 
-	var (
-		dstr = `{"cns":[
+	dstr := `{"cns":[
 		 	{
 				"server_uuid":"44454c4c-5000-104d-8037-b7c04f5a5131",
 				"server_hostname": "server01"
@@ -231,7 +222,6 @@ func TestTritonSDRefreshCNsWithHostname(t *testing.T) {
 				"server_hostname": "server02"
 			}]
 		}`
-	)
 
 	tgts := testTritonSDRefresh(t, cnconf, dstr)
 	require.NotNil(t, tgts)

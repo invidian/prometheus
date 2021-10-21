@@ -26,10 +26,10 @@ import (
 	"github.com/golang/snappy"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
-	"go.uber.org/atomic"
-
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/model"
+	"go.uber.org/atomic"
+
 	"github.com/prometheus/prometheus/config"
 	"github.com/prometheus/prometheus/pkg/labels"
 	"github.com/prometheus/prometheus/pkg/relabel"
@@ -1046,7 +1046,7 @@ func (s *shards) runShard(ctx context.Context, shardID int, queue chan interface
 		max += int(float64(max) * 0.1)
 	}
 
-	var pendingData = make([]prompb.TimeSeries, max)
+	pendingData := make([]prompb.TimeSeries, max)
 	for i := range pendingData {
 		pendingData[i].Samples = []prompb.Sample{{}}
 		if s.qm.sendExemplars {

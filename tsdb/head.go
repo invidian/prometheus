@@ -1197,7 +1197,6 @@ func (h *Head) Close() error {
 		errs.Add(h.performChunkSnapshot())
 	}
 	return errs.Err()
-
 }
 
 // String returns an human readable representation of the TSDB head. It's important to

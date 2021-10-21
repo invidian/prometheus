@@ -119,7 +119,6 @@ func (c *SDConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	*c = DefaultSDConfig
 	type plain SDConfig
 	err := unmarshal((*plain)(c))
-
 	if err != nil {
 		return err
 	}
@@ -234,7 +233,6 @@ func (d *Discovery) getEndpointLabels(
 	systemGroupIDs []systemGroupID,
 	networkInfo networkInfo,
 ) model.LabelSet {
-
 	var addr, scheme string
 	managedGroupNames := getSystemGroupNames(systemGroupIDs)
 	addr = fmt.Sprintf("%s:%d", networkInfo.Hostname, endpoint.Port)
@@ -274,7 +272,6 @@ func (d *Discovery) getTargetsForSystems(
 	token string,
 	entitlement string,
 ) ([]model.LabelSet, error) {
-
 	result := make([]model.LabelSet, 0)
 
 	systemGroupIDsBySystemID, err := getSystemGroupsInfoOfMonitoredClients(rpcClient, token, entitlement)

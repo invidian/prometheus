@@ -354,6 +354,7 @@ func (p *parser) InjectItem(typ ItemType) {
 	p.inject = typ
 	p.injecting = true
 }
+
 func (p *parser) newBinaryExpression(lhs Node, op Item, modifiers Node, rhs Node) *BinaryExpr {
 	ret := modifiers.(*BinaryExpr)
 
@@ -650,7 +651,6 @@ func (p *parser) parseGenerated(startSymbol ItemType) interface{} {
 	p.yyParser.Parse(p)
 
 	return p.generatedParserResult
-
 }
 
 func (p *parser) newLabelMatcher(label Item, operator Item, value Item) *labels.Matcher {

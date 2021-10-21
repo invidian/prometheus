@@ -42,7 +42,9 @@ import (
 	"github.com/prometheus/prometheus/tsdb/chunks"
 	tsdb_errors "github.com/prometheus/prometheus/tsdb/errors"
 	"github.com/prometheus/prometheus/tsdb/fileutil"
-	_ "github.com/prometheus/prometheus/tsdb/goversion" // Load the package into main to make sure minium Go version is met.
+
+	//  Load the package into main to make sure minium Go version is met.
+	_ "github.com/prometheus/prometheus/tsdb/goversion"
 	"github.com/prometheus/prometheus/tsdb/wal"
 )
 
@@ -65,10 +67,8 @@ const (
 	lockfileCreatedCleanly = 1
 )
 
-var (
-	// ErrNotReady is returned if the underlying storage is not ready yet.
-	ErrNotReady = errors.New("TSDB not ready")
-)
+// ErrNotReady is returned if the underlying storage is not ready yet.
+var ErrNotReady = errors.New("TSDB not ready")
 
 // DefaultOptions used for the DB. They are sane for setups using
 // millisecond precision timestamps.
@@ -609,7 +609,7 @@ func validateOpts(opts *Options, rngs []int64) (*Options, []int64) {
 }
 
 func open(dir string, l log.Logger, r prometheus.Registerer, opts *Options, rngs []int64, stats *DBStats) (_ *DB, returnedErr error) {
-	if err := os.MkdirAll(dir, 0777); err != nil {
+	if err := os.MkdirAll(dir, 0o777); err != nil {
 		return nil, err
 	}
 	if l == nil {

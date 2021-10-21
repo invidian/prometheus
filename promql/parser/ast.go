@@ -426,15 +426,19 @@ func (i *Item) PositionRange() PositionRange {
 func (e *AggregateExpr) PositionRange() PositionRange {
 	return e.PosRange
 }
+
 func (e *BinaryExpr) PositionRange() PositionRange {
 	return mergeRanges(e.LHS, e.RHS)
 }
+
 func (e *Call) PositionRange() PositionRange {
 	return e.PosRange
 }
+
 func (e *EvalStmt) PositionRange() PositionRange {
 	return e.Expr.PositionRange()
 }
+
 func (e Expressions) PositionRange() PositionRange {
 	if len(e) == 0 {
 		// Position undefined.
@@ -445,33 +449,40 @@ func (e Expressions) PositionRange() PositionRange {
 	}
 	return mergeRanges(e[0], e[len(e)-1])
 }
+
 func (e *MatrixSelector) PositionRange() PositionRange {
 	return PositionRange{
 		Start: e.VectorSelector.PositionRange().Start,
 		End:   e.EndPos,
 	}
 }
+
 func (e *SubqueryExpr) PositionRange() PositionRange {
 	return PositionRange{
 		Start: e.Expr.PositionRange().Start,
 		End:   e.EndPos,
 	}
 }
+
 func (e *NumberLiteral) PositionRange() PositionRange {
 	return e.PosRange
 }
+
 func (e *ParenExpr) PositionRange() PositionRange {
 	return e.PosRange
 }
+
 func (e *StringLiteral) PositionRange() PositionRange {
 	return e.PosRange
 }
+
 func (e *UnaryExpr) PositionRange() PositionRange {
 	return PositionRange{
 		Start: e.StartPos,
 		End:   e.Expr.PositionRange().End,
 	}
 }
+
 func (e *VectorSelector) PositionRange() PositionRange {
 	return e.PosRange
 }

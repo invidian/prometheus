@@ -126,9 +126,7 @@ func newTestTargetRetriever(targetsInfo []*testTargetParams) *testTargetRetrieve
 	}
 }
 
-var (
-	scrapeStart = time.Now().Add(-11 * time.Second)
-)
+var scrapeStart = time.Now().Add(-11 * time.Second)
 
 func (t testTargetRetriever) TargetsActive() map[string][]*scrape.Target {
 	return t.activeTargets
@@ -458,7 +456,6 @@ func TestEndpoints(t *testing.T) {
 
 		testEndpoints(t, api, testTargetRetriever, suite.ExemplarStorage(), false)
 	})
-
 }
 
 func TestLabelNames(t *testing.T) {
@@ -664,7 +661,7 @@ func testEndpoints(t *testing.T, api *API, tr *testTargetRetriever, es storage.E
 		exemplars   []exemplar.QueryResult
 	}
 
-	var tests = []test{
+	tests := []test{
 		{
 			endpoint: api.query,
 			query: url.Values{
@@ -2192,6 +2189,7 @@ func (f *fakeDB) Stats(statsByLabelName string) (_ *tsdb.Stats, retErr error) {
 	h, _ := tsdb.NewHead(nil, nil, nil, opts, nil)
 	return h.Stats(statsByLabelName), nil
 }
+
 func (f *fakeDB) WALReplayStatus() (tsdb.WALReplayStatus, error) {
 	return tsdb.WALReplayStatus{}, nil
 }
@@ -2472,7 +2470,7 @@ func TestParseTimeParam(t *testing.T) {
 	ts, err := parseTime("1582468023986")
 	require.NoError(t, err)
 
-	var tests = []struct {
+	tests := []struct {
 		paramName    string
 		paramValue   string
 		defaultValue time.Time
@@ -2533,7 +2531,7 @@ func TestParseTime(t *testing.T) {
 		panic(err)
 	}
 
-	var tests = []struct {
+	tests := []struct {
 		input  string
 		fail   bool
 		result time.Time
@@ -2541,25 +2539,32 @@ func TestParseTime(t *testing.T) {
 		{
 			input: "",
 			fail:  true,
-		}, {
+		},
+		{
 			input: "abc",
 			fail:  true,
-		}, {
+		},
+		{
 			input: "30s",
 			fail:  true,
-		}, {
+		},
+		{
 			input:  "123",
 			result: time.Unix(123, 0),
-		}, {
+		},
+		{
 			input:  "123.123",
 			result: time.Unix(123, 123000000),
-		}, {
+		},
+		{
 			input:  "2015-06-03T13:21:58.555Z",
 			result: ts,
-		}, {
+		},
+		{
 			input:  "2015-06-03T14:21:58.555+01:00",
 			result: ts,
-		}, {
+		},
+		{
 			// Test float rounding.
 			input:  "1543578564.705",
 			result: time.Unix(1543578564, 705*1e6),
@@ -2593,7 +2598,7 @@ func TestParseTime(t *testing.T) {
 func TestParseDuration(t *testing.T) {
 	t.Parallel()
 
-	var tests = []struct {
+	tests := []struct {
 		input  string
 		fail   bool
 		result time.Duration

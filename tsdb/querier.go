@@ -606,6 +606,7 @@ func (p *populateWithDelGenericSeriesIterator) Err() error { return p.err }
 func (p *populateWithDelGenericSeriesIterator) toSeriesIterator() chunkenc.Iterator {
 	return &populateWithDelSeriesIterator{populateWithDelGenericSeriesIterator: p}
 }
+
 func (p *populateWithDelGenericSeriesIterator) toChunkSeriesIterator() chunks.Iterator {
 	return &populateWithDelChunkSeriesIterator{populateWithDelGenericSeriesIterator: p}
 }
@@ -875,7 +876,6 @@ Outer:
 
 			if ts <= tr.Maxt {
 				return true
-
 			}
 			it.Intervals = it.Intervals[1:]
 		}

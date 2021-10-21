@@ -39,7 +39,6 @@ func TestPostingsStats(t *testing.T) {
 	for i := 0; i < heapLength; i++ {
 		require.Equal(t, uint64(max-i), data[i].Count)
 	}
-
 }
 
 func TestPostingsStats2(t *testing.T) {
@@ -59,6 +58,7 @@ func TestPostingsStats2(t *testing.T) {
 	require.Equal(t, 4, len(data))
 	require.Equal(t, uint64(11), data[0].Count)
 }
+
 func BenchmarkPostingStatsMaxHep(b *testing.B) {
 	stats := &maxHeap{}
 	max := 9000000
@@ -75,5 +75,4 @@ func BenchmarkPostingStatsMaxHep(b *testing.B) {
 		}
 		stats.get()
 	}
-
 }

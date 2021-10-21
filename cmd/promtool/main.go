@@ -45,7 +45,9 @@ import (
 
 	"github.com/prometheus/prometheus/config"
 	"github.com/prometheus/prometheus/discovery/file"
-	_ "github.com/prometheus/prometheus/discovery/install" // Register service discovery implementations.
+
+	//  Register service discovery implementations.
+	_ "github.com/prometheus/prometheus/discovery/install"
 	"github.com/prometheus/prometheus/discovery/kubernetes"
 	"github.com/prometheus/prometheus/discovery/targetgroup"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -245,7 +247,7 @@ func main() {
 
 	case tsdbDumpCmd.FullCommand():
 		os.Exit(checkErr(dumpSamples(*dumpPath, *dumpMinTime, *dumpMaxTime)))
-	//TODO(aSquare14): Work on adding support for custom block size.
+	// TODO(aSquare14): Work on adding support for custom block size.
 	case openMetricsImportCmd.FullCommand():
 		os.Exit(backfillOpenMetrics(*importFilePath, *importDBPath, *importHumanReadable, *importQuiet, *maxBlockDuration))
 
@@ -507,7 +509,6 @@ func checkDuplicates(groups []rulefmt.RuleGroup) []compareRuleType {
 	var rules compareRuleTypes
 
 	for _, group := range groups {
-
 		for _, rule := range group.Rules {
 			rules = append(rules, compareRuleType{
 				metric: ruleMetric(rule),
@@ -899,11 +900,13 @@ type promqlPrinter struct{}
 func (p *promqlPrinter) printValue(v model.Value) {
 	fmt.Println(v)
 }
+
 func (p *promqlPrinter) printSeries(val []model.LabelSet) {
 	for _, v := range val {
 		fmt.Println(v)
 	}
 }
+
 func (p *promqlPrinter) printLabelValues(val model.LabelValues) {
 	for _, v := range val {
 		fmt.Println(v)
@@ -916,10 +919,12 @@ func (j *jsonPrinter) printValue(v model.Value) {
 	//nolint:errcheck
 	json.NewEncoder(os.Stdout).Encode(v)
 }
+
 func (j *jsonPrinter) printSeries(v []model.LabelSet) {
 	//nolint:errcheck
 	json.NewEncoder(os.Stdout).Encode(v)
 }
+
 func (j *jsonPrinter) printLabelValues(v model.LabelValues) {
 	//nolint:errcheck
 	json.NewEncoder(os.Stdout).Encode(v)

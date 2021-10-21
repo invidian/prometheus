@@ -42,7 +42,7 @@ import (
 func TestPostPath(t *testing.T) {
 	t.Parallel()
 
-	var cases = []struct {
+	cases := []struct {
 		in, out string
 	}{
 		{
@@ -474,7 +474,7 @@ func TestLabelSetNotReused(t *testing.T) {
 func TestReload(t *testing.T) {
 	t.Parallel()
 
-	var tests = []struct {
+	tests := []struct {
 		in  *targetgroup.Group
 		out string
 	}{
@@ -518,13 +518,12 @@ alerting:
 
 		require.Equal(t, tt.out, res)
 	}
-
 }
 
 func TestDroppedAlertmanagers(t *testing.T) {
 	t.Parallel()
 
-	var tests = []struct {
+	tests := []struct {
 		in  *targetgroup.Group
 		out string
 	}{

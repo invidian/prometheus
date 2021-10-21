@@ -39,9 +39,9 @@ func TestConfiguredService(t *testing.T) {
 	t.Parallel()
 
 	conf := &SDConfig{
-		Services: []string{"configuredServiceName"}}
+		Services: []string{"configuredServiceName"},
+	}
 	consulDiscovery, err := NewDiscovery(conf, nil)
-
 	if err != nil {
 		t.Errorf("Unexpected error when initializing discovery %v", err)
 	}
@@ -61,7 +61,6 @@ func TestConfiguredServiceWithTag(t *testing.T) {
 		ServiceTags: []string{"http"},
 	}
 	consulDiscovery, err := NewDiscovery(conf, nil)
-
 	if err != nil {
 		t.Errorf("Unexpected error when initializing discovery %v", err)
 	}
@@ -159,7 +158,6 @@ func TestConfiguredServiceWithTags(t *testing.T) {
 
 	for _, tc := range cases {
 		consulDiscovery, err := NewDiscovery(tc.conf, nil)
-
 		if err != nil {
 			t.Errorf("Unexpected error when initializing discovery %v", err)
 		}
@@ -176,7 +174,6 @@ func TestNonConfiguredService(t *testing.T) {
 
 	conf := &SDConfig{}
 	consulDiscovery, err := NewDiscovery(conf, nil)
-
 	if err != nil {
 		t.Errorf("Unexpected error when initializing discovery %v", err)
 	}

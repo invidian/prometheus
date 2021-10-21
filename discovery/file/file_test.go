@@ -481,6 +481,7 @@ func TestRemoveFile(t *testing.T) {
 			},
 			{
 				Source: fileSource(sdFile, 1),
-			}},
+			},
+		},
 	)
 }

@@ -109,7 +109,6 @@ func TestSampleDelivery(t *testing.T) {
 	//nolint:paralleltest // TODO: Serial tests.
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-
 			var (
 				series    []record.RefSeries
 				samples   []record.RefSample
@@ -734,7 +733,7 @@ func BenchmarkSampleDelivery(b *testing.B) {
 	const numSeries = 10000
 
 	// Extra labels to make a more realistic workload - taken from Kubernetes' embedded cAdvisor metrics.
-	var extraLabels = labels.Labels{
+	extraLabels := labels.Labels{
 		{Name: "kubernetes_io_arch", Value: "amd64"},
 		{Name: "kubernetes_io_instance_type", Value: "c3.somesize"},
 		{Name: "kubernetes_io_os", Value: "linux"},

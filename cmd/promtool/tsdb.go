@@ -17,7 +17,6 @@ import (
 	"bufio"
 	"context"
 	"fmt"
-	"github.com/prometheus/prometheus/tsdb/index"
 	"io"
 	"io/ioutil"
 	"math"
@@ -41,6 +40,7 @@ import (
 	"github.com/prometheus/prometheus/tsdb/chunks"
 	tsdb_errors "github.com/prometheus/prometheus/tsdb/errors"
 	"github.com/prometheus/prometheus/tsdb/fileutil"
+	"github.com/prometheus/prometheus/tsdb/index"
 )
 
 const timeDelta = 30000
@@ -78,7 +78,7 @@ func benchmarkWrite(outPath, samplesFile string, numMetrics, numScrapes int) err
 	if err := os.RemoveAll(b.outPath); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(b.outPath, 0777); err != nil {
+	if err := os.MkdirAll(b.outPath, 0o777); err != nil {
 		return err
 	}
 
@@ -589,7 +589,7 @@ func analyzeCompaction(block tsdb.BlockReader, indexr tsdb.IndexReader) (err err
 	histogram := make([]int, nBuckets)
 	totalChunks := 0
 	for postingsr.Next() {
-		var lbsl = labels.Labels{}
+		lbsl := labels.Labels{}
 		var chks []chunks.Meta
 		if err := indexr.Series(postingsr.At(), &lbsl, &chks); err != nil {
 			return err
@@ -678,7 +678,7 @@ func backfillOpenMetrics(path string, outputDir string, humanReadable, quiet boo
 	}
 	defer inputFile.Close()
 
-	if err := os.MkdirAll(outputDir, 0777); err != nil {
+	if err := os.MkdirAll(outputDir, 0o777); err != nil {
 		return checkErr(errors.Wrap(err, "create output dir"))
 	}
 

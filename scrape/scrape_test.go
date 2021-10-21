@@ -362,7 +362,7 @@ func TestScrapePoolTargetLimit(t *testing.T) {
 		client:        http.DefaultClient,
 	}
 
-	var tgs = []*targetgroup.Group{}
+	tgs := []*targetgroup.Group{}
 	for i := 0; i < 50; i++ {
 		tgs = append(tgs,
 			&targetgroup.Group{
@@ -1030,6 +1030,7 @@ func BenchmarkScrapeLoopAppend(b *testing.B) {
 		_, _, _, _ = sl.append(slApp, metrics, "", ts)
 	}
 }
+
 func BenchmarkScrapeLoopAppendOM(b *testing.B) {
 	ctx, sl := simpleTestScrapeLoop(b)
 
@@ -1454,8 +1455,10 @@ func TestScrapeLoopAppendForConflictingPrefixedLabels(t *testing.T) {
 		"Two target labels collide with existing labels, both with and without prefix 'exported'": {
 			targetLabels:  []string{"foo", "3", "exported_foo", "4"},
 			exposedLabels: `metric{foo="1" exported_foo="2"} 0`,
-			expected: []string{"__name__", "metric", "exported_exported_foo", "1", "exported_exported_exported_foo",
-				"2", "exported_foo", "4", "foo", "3"},
+			expected: []string{
+				"__name__", "metric", "exported_exported_foo", "1", "exported_exported_exported_foo",
+				"2", "exported_foo", "4", "foo", "3",
+			},
 		},
 		"Extreme example": {
 			targetLabels:  []string{"foo", "0", "exported_exported_foo", "1", "exported_exported_exported_foo", "2"},
@@ -1800,7 +1803,8 @@ func TestScrapeLoopAppendExemplar(t *testing.T) {
 			exemplars: []exemplar.Exemplar{
 				{Labels: labels.FromStrings("a", "abc"), Value: 1},
 			},
-		}, {
+		},
+		{
 			title:           "Metric with exemplars and TS",
 			scrapeText:      "metric_total{n=\"1\"} 0 # {a=\"abc\"} 1.0 10000\n# EOF",
 			discoveryLabels: []string{"n", "2"},
@@ -1811,7 +1815,8 @@ func TestScrapeLoopAppendExemplar(t *testing.T) {
 			exemplars: []exemplar.Exemplar{
 				{Labels: labels.FromStrings("a", "abc"), Value: 1, Ts: 10000000, HasTs: true},
 			},
-		}, {
+		},
+		{
 			title: "Two metrics and exemplars",
 			scrapeText: `metric_total{n="1"} 1 # {t="1"} 1.0 10000
 metric_total{n="2"} 2 # {t="2"} 2.0 20000
@@ -2111,7 +2116,6 @@ func TestScrapeLoopOutOfBoundsTimeError(t *testing.T) {
 	require.Equal(t, 1, total)
 	require.Equal(t, 1, added)
 	require.Equal(t, 0, seriesAdded)
-
 }
 
 func TestTargetScraperScrapeOK(t *testing.T) {

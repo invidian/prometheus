@@ -234,7 +234,7 @@ func TestNoPanicAfterWALCorruption(t *testing.T) {
 	{
 		walFiles, err := ioutil.ReadDir(path.Join(db.Dir(), "wal"))
 		require.NoError(t, err)
-		f, err := os.OpenFile(path.Join(db.Dir(), "wal", walFiles[0].Name()), os.O_RDWR, 0666)
+		f, err := os.OpenFile(path.Join(db.Dir(), "wal", walFiles[0].Name()), os.O_RDWR, 0o666)
 		require.NoError(t, err)
 		r := wal.NewReader(bufio.NewReader(f))
 		require.True(t, r.Next(), "reading the series record")
@@ -1293,7 +1293,6 @@ func TestTombstoneCleanRetentionLimitsRace(t *testing.T) {
 
 		require.NoError(t, db.Close())
 	}
-
 }
 
 func intersection(oldBlocks, actualBlocks []string) (intersection []string) {
@@ -1320,6 +1319,7 @@ type mockCompactorFailing struct {
 func (*mockCompactorFailing) Plan(dir string) ([]string, error) {
 	return nil, nil
 }
+
 func (c *mockCompactorFailing) Write(dest string, b BlockReader, mint, maxt int64, parent *BlockMeta) (ulid.ULID, error) {
 	if len(c.blocks) >= c.max {
 		return ulid.ULID{}, fmt.Errorf("the compactor already did the maximum allowed blocks so it is time to fail")
@@ -1622,7 +1622,7 @@ func TestOverlappingBlocksDetectsAllOverlaps(t *testing.T) {
 
 	// Create 10 blocks that does not overlap (0-10, 10-20, ..., 100-110) but in reverse order to ensure our algorithm
 	// will handle that.
-	var metas = make([]BlockMeta, 11)
+	metas := make([]BlockMeta, 11)
 	for i := 10; i >= 0; i-- {
 		metas[i] = BlockMeta{MinTime: int64(i * 10), MaxTime: int64((i + 1) * 10)}
 	}
@@ -1854,7 +1854,7 @@ func TestInitializeHeadTimestamp(t *testing.T) {
 			require.NoError(t, os.RemoveAll(dir))
 		}()
 
-		require.NoError(t, os.MkdirAll(path.Join(dir, "wal"), 0777))
+		require.NoError(t, os.MkdirAll(path.Join(dir, "wal"), 0o777))
 		w, err := wal.New(nil, nil, path.Join(dir, "wal"), false)
 		require.NoError(t, err)
 
@@ -1908,7 +1908,7 @@ func TestInitializeHeadTimestamp(t *testing.T) {
 
 		createBlock(t, dir, genSeries(1, 1, 1000, 6000))
 
-		require.NoError(t, os.MkdirAll(path.Join(dir, "wal"), 0777))
+		require.NoError(t, os.MkdirAll(path.Join(dir, "wal"), 0o777))
 		w, err := wal.New(nil, nil, path.Join(dir, "wal"), false)
 		require.NoError(t, err)
 
@@ -3011,7 +3011,7 @@ func TestOpen_VariousBlockStates(t *testing.T) {
 		expectedLoadedDirs[outDir] = struct{}{}
 
 		// Touch chunks dir in block.
-		require.NoError(t, os.MkdirAll(filepath.Join(dbDir, "chunks"), 0777))
+		require.NoError(t, os.MkdirAll(filepath.Join(dbDir, "chunks"), 0o777))
 		defer func() {
 			require.NoError(t, os.RemoveAll(filepath.Join(dbDir, "chunks")))
 		}()
@@ -3288,7 +3288,7 @@ func TestLockfileMetric(t *testing.T) {
 			// Test preconditions (file already exists + lockfile option)
 			lockfilePath := filepath.Join(absdir, "lock")
 			if c.fileAlreadyExists {
-				err = ioutil.WriteFile(lockfilePath, []byte{}, 0644)
+				err = ioutil.WriteFile(lockfilePath, []byte{}, 0o644)
 				require.NoError(t, err)
 			}
 			opts := DefaultOptions()

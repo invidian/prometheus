@@ -30,9 +30,11 @@ import (
 	"github.com/prometheus/prometheus/tsdb/record"
 )
 
-var defaultRetryInterval = 100 * time.Millisecond
-var defaultRetries = 100
-var wMetrics = NewWatcherMetrics(prometheus.DefaultRegisterer)
+var (
+	defaultRetryInterval = 100 * time.Millisecond
+	defaultRetries       = 100
+	wMetrics             = NewWatcherMetrics(prometheus.DefaultRegisterer)
+)
 
 // retry executes f() n times at each interval until it returns true.
 func retry(t *testing.T, interval time.Duration, n int, f func() bool) {
@@ -123,7 +125,7 @@ func TestTailSamples(t *testing.T) {
 			}()
 
 			wdir := path.Join(dir, "wal")
-			err = os.Mkdir(wdir, 0777)
+			err = os.Mkdir(wdir, 0o777)
 			require.NoError(t, err)
 
 			enc := record.Encoder{}
@@ -222,7 +224,7 @@ func TestReadToEndNoCheckpoint(t *testing.T) {
 				require.NoError(t, os.RemoveAll(dir))
 			}()
 			wdir := path.Join(dir, "wal")
-			err = os.Mkdir(wdir, 0777)
+			err = os.Mkdir(wdir, 0o777)
 			require.NoError(t, err)
 
 			w, err := NewSize(nil, nil, wdir, 128*pageSize, compress)
@@ -302,7 +304,7 @@ func TestReadToEndWithCheckpoint(t *testing.T) {
 			}()
 
 			wdir := path.Join(dir, "wal")
-			err = os.Mkdir(wdir, 0777)
+			err = os.Mkdir(wdir, 0o777)
 			require.NoError(t, err)
 
 			enc := record.Encoder{}
@@ -399,7 +401,7 @@ func TestReadCheckpoint(t *testing.T) {
 			}()
 
 			wdir := path.Join(dir, "wal")
-			err = os.Mkdir(wdir, 0777)
+			err = os.Mkdir(wdir, 0o777)
 			require.NoError(t, err)
 
 			os.Create(SegmentName(wdir, 30))
@@ -477,7 +479,7 @@ func TestReadCheckpointMultipleSegments(t *testing.T) {
 			}()
 
 			wdir := path.Join(dir, "wal")
-			err = os.Mkdir(wdir, 0777)
+			err = os.Mkdir(wdir, 0o777)
 			require.NoError(t, err)
 
 			enc := record.Encoder{}
@@ -513,7 +515,7 @@ func TestReadCheckpointMultipleSegments(t *testing.T) {
 
 			// At this point we should have at least 6 segments, lets create a checkpoint dir of the first 5.
 			checkpointDir := dir + "/wal/checkpoint.000004"
-			err = os.Mkdir(checkpointDir, 0777)
+			err = os.Mkdir(checkpointDir, 0o777)
 			require.NoError(t, err)
 			for i := 0; i <= 4; i++ {
 				err := os.Rename(SegmentName(dir+"/wal", i), SegmentName(checkpointDir, i))
@@ -565,7 +567,7 @@ func TestCheckpointSeriesReset(t *testing.T) {
 			}()
 
 			wdir := path.Join(dir, "wal")
-			err = os.Mkdir(wdir, 0777)
+			err = os.Mkdir(wdir, 0o777)
 			require.NoError(t, err)
 
 			enc := record.Encoder{}

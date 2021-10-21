@@ -41,10 +41,8 @@ const (
 	Exemplars Type = 4
 )
 
-var (
-	// ErrNotFound is returned if a looked up resource was not found. Duplicate ErrNotFound from head.go.
-	ErrNotFound = errors.New("not found")
-)
+// ErrNotFound is returned if a looked up resource was not found. Duplicate ErrNotFound from head.go.
+var ErrNotFound = errors.New("not found")
 
 // RefSeries is the series labels with the series ID.
 type RefSeries struct {
