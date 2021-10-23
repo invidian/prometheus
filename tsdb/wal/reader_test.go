@@ -317,11 +317,9 @@ func allSegments(dir string) (io.ReadCloser, error) {
 	}, nil
 }
 
-//nolint:paralleltest // TODO: This test sometimes fails when executed in parallel.
 func TestReaderFuzz(t *testing.T) {
 	for name, fn := range readerConstructors {
 		for _, compress := range []bool{false, true} {
-			//nolint:paralleltest // TODO: This test sometimes fails when executed in parallel.
 			t.Run(fmt.Sprintf("%s,compress=%t", name, compress), func(t *testing.T) {
 				t.Parallel()
 
@@ -359,10 +357,8 @@ func TestReaderFuzz(t *testing.T) {
 	}
 }
 
-//nolint:paralleltest // TODO: This test sometimes fails when executed in parallel.
 func TestReaderFuzz_Live(t *testing.T) {
 	for _, compress := range []bool{false, true} {
-		//nolint:paralleltest // TODO: This test sometimes fails when executed in parallel.
 		t.Run(fmt.Sprintf("compress=%t", compress), func(t *testing.T) {
 			t.Parallel()
 
