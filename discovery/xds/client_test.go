@@ -26,8 +26,8 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
-var (
-	httpResourceConf = &HTTPResourceClientConfig{
+func httpResourceConf() *HTTPResourceClientConfig {
+	return &HTTPResourceClientConfig{
 		HTTPClientConfig: config.HTTPClientConfig{
 			TLSConfig: config.TLSConfig{InsecureSkipVerify: true},
 		},
@@ -37,7 +37,7 @@ var (
 		Server:          "http://localhost",
 		ClientID:        "test-id",
 	}
-)
+}
 
 func urlMustParse(str string) *url.URL {
 	parsed, err := url.Parse(str)
@@ -120,7 +120,7 @@ func createTestHTTPResourceClient(t *testing.T, conf *HTTPResourceClientConfig, 
 func TestHTTPResourceClientFetchEmptyResponse(t *testing.T) {
 	t.Parallel()
 
-	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf, ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
+	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf(), ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
 		return nil, nil
 	})
 	defer cleanup()
@@ -133,7 +133,7 @@ func TestHTTPResourceClientFetchEmptyResponse(t *testing.T) {
 func TestHTTPResourceClientFetchFullResponse(t *testing.T) {
 	t.Parallel()
 
-	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf, ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
+	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf(), ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
 		if request.VersionInfo == "1" {
 			return nil, nil
 		}
@@ -164,7 +164,7 @@ func TestHTTPResourceClientFetchFullResponse(t *testing.T) {
 func TestHTTPResourceClientServerError(t *testing.T) {
 	t.Parallel()
 
-	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf, ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
+	client, cleanup := createTestHTTPResourceClient(t, httpResourceConf(), ProtocolV3, func(request *v3.DiscoveryRequest) (*v3.DiscoveryResponse, error) {
 		return nil, errors.New("server error")
 	})
 	defer cleanup()
