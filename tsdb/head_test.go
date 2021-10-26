@@ -878,6 +878,10 @@ func TestDeletedSamplesAndSeriesStillInWALAfterCheckpoint(t *testing.T) {
 }
 
 func TestDelete_e2e(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
 	t.Parallel()
 
 	numDatapoints := 1000
@@ -1867,6 +1871,10 @@ func TestIsolationAppendIDZeroIsNoop(t *testing.T) {
 }
 
 func TestHeadSeriesChunkRace(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
 	t.Parallel()
 
 	for i := 0; i < 1000; i++ {

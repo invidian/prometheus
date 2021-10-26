@@ -781,6 +781,10 @@ Outer:
 }
 
 func TestDB_e2e(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
 	t.Parallel()
 
 	const (
@@ -3098,6 +3102,10 @@ func TestOpen_VariousBlockStates(t *testing.T) {
 }
 
 func TestOneCheckpointPerCompactCall(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
 	t.Parallel()
 
 	blockRange := int64(1000)
