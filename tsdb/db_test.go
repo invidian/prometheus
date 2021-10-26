@@ -2300,6 +2300,8 @@ func TestBlockRanges(t *testing.T) {
 //nolint:paralleltest // TODO: This test fails on Windows when running in parallel.
 //                    // See https://github.com/prometheus/prometheus/issues/7770.
 func TestDBReadOnly(t *testing.T) {
+	t.Parallel()
+
 	var (
 		dbDir     string
 		logger    = log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
